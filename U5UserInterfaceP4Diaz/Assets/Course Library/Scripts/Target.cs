@@ -9,9 +9,9 @@ public class Target : MonoBehaviour
     private Rigidbody targetRb;
     private GameManager gameManager;
 
-    private float minSpeed = 12;
-    private float maxSpeed = 16;
-    private float maxTorque = 10;
+    private float minSpeed = 14;
+    private float maxSpeed = 18;
+    private float maxTorque = 12;
     private float xRange = 4;
     private float ySpawnPos = -6;
 
@@ -60,9 +60,9 @@ public class Target : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Destroy(gameObject);
-        if (!gameObject.CompareTag("Bad"))
+        if (!gameObject.CompareTag("Bad") && gameManager.isGameActive)
         {
-            gameManager.GameOver();
+            gameManager.UpdateLives(-1);
         }
     }
 }
