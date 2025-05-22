@@ -13,20 +13,21 @@ public class GameManager : MonoBehaviour
     private int score;
     public bool isGameActive;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI lifeText;
     public TextMeshProUGUI gameOverText;
     public Button restartButton;
+    public GameObject titleScreen;
+    public GameObject pauseScreen;
+    private bool paused;
+
+    public int lives;
 
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(SpawnTarget());
-
-        score = 0;
-        UpdateScore(0);
-        isGameActive = true;
         gameOverText.gameObject.SetActive(false);
         restartButton.gameObject.SetActive(false);
-
+        isGameActive = false;
     }
 
     IEnumerator SpawnTarget()
@@ -36,6 +37,42 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(spawnRate);
             int index = Random.Range(0, targets.Count);
             Instantiate(targets[index]);
+        }
+    }
+    public void StartGame(int difficulty)
+    {
+        isGameActive = true;
+
+        StartCoroutine(SpawnTarget());
+
+        score = 0;
+        UpdateScore(0);
+        UpdateLives(3);
+        titleScreen.gameObject.SetActive(false);
+
+        spawnRate /= difficulty;
+    }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ChangePaused();
+        }
+    }
+
+    void ChangePaused()
+    {
+        if (!paused)
+        {
+            paused = true;
+            pauseScreen.SetActive(true);
+            Time.timeScale = 0;
+        }
+        else
+        {
+            paused = false;
+            pauseScreen.SetActive(false);
+            Time.timeScale = 1;
         }
     }
 
@@ -52,6 +89,16 @@ public class GameManager : MonoBehaviour
         score += scoreToAdd;
         scoreText.text = "Score: " + score;
     }
+    public void UpdateLives(int livesToChange)
+    {
+        lives += livesToChange;
+        lifeText.text = "Lives: " + lives;
+        if (lives <= 0)
+        {
+            GameOver();
+        }
+    }
+
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
