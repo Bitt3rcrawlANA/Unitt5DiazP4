@@ -60,7 +60,7 @@ public class Target : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Destroy(gameObject);
-        if (!gameObject.CompareTag("Good") && gameManager.isGameActive)
+        if (!gameObject.CompareTag("Bad") && gameManager.isGameActive)
         {
             gameManager.UpdateLives(-1);
         }
